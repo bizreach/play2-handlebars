@@ -1,0 +1,25 @@
+*.class
+*.log
+
+# sbt specific
+.cache/
+.history/
+.lib/
+dist/*
+target/
+lib_managed/
+src_managed/
+project/boot/
+project/plugins/project/
+
+# Scala-IDE specific
+.scala_dependencies
+.worksheet
+
+# Mac OSX specific
+.DS_Store
+
+# IntelliJ IDEA specific
+.idea
+.idea_modules
+atlassian-ide-plugin.xml
