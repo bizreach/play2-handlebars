@@ -4,6 +4,23 @@ play2-handlebars
 Play framework plugin for handlebars.java
 
 
+## Pros and Cons
+
+### Pros
+
+- Knowledge sharing between frontend and backend:
+  - Reuse or migrate Handlebars template without any changes
+  - Frontend developers do not need to learn any new technologies
+- Quick reloading: 
+-
+
+### Cons
+
+- loss of type safety: Cannot detect file existence, parameter mapping and other things unless the request is not called.
+  - parameter
+  - routing
+- Sometimes the grammer conflicts with other formats such as AngularJS. 
+-
 
 ## Getting Started
 
@@ -56,6 +73,16 @@ play2handlebars {
   ]
 }
 
+### Change views location
+
+### Choose the template loader
+
+### Add Handlebars helpers
+
 ## Releases
 
 No release versions have been published yet. Wait a while.
+
+## Appendix
+
+### Cheat Sheet of Handlebars.java in Scala 

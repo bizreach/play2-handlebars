@@ -3,7 +3,7 @@ package jp.co.bizreach.play2handlebars
 
 import com.github.jknack.handlebars.Handlebars.SafeString
 import com.github.jknack.handlebars.io.{ClassPathTemplateLoader, FileTemplateLoader}
-import com.github.jknack.handlebars.{Helper, Template, Handlebars}
+import com.github.jknack.handlebars._
 import play.api.{Play, Plugin, Application, Logger}
 import play.twirl.api.{HtmlFormat, Html}
 
@@ -127,10 +127,16 @@ object HBS {
       else
         compile
 
+    // Add several resolvers for scala
+    val resolvers = ValueResolver.VALUE_RESOLVERS ++ Array(ScalaMapValueResolver, CaseClassValueResolver)
+    val context = Context
+      .newBuilder(attributes)
+      .resolver(resolvers:_*)
+      .build()
 
 
-    // Wrap as html. See play.api.http.Writeable
-    HtmlFormat.raw(template.apply(attributes.asJava))
+    // Wrap as html. See play.api.http.Writable
+    HtmlFormat.raw(template.apply(context))
   }
 
 
@@ -138,6 +144,15 @@ object HBS {
    * Shorthand for Handlebars.SafeString class instantiation
    */
   def safeString(safeString:Any): SafeString = new Handlebars.SafeString(safeString.toString)
+
+
+  /**
+   * Convert any case class to java map using reflection.
+   *
+   * CAUTION: this may be slow
+   */
+  def toJavaMap[A <: Product](product:A):java.util.Map[String, Any] =
+    product.getClass.getDeclaredFields.map(_.getName).zip(product.productIterator.toList).toMap.asJava
 
 
   private[play2handlebars] def engine = current.plugin[HandlebarsPlugin].map(_.engine)

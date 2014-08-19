@@ -2,7 +2,7 @@ name := "play2-handlebars"
 
 organization := "jp.co.bizreach"
 
-version := "0.0.1"
+version := "0.1-SNAPSHOT"
 
 scalaVersion := "2.11.2"
 
@@ -20,11 +20,14 @@ libraryDependencies ++= Seq(
 
 publishMavenStyle := true
 
-publishTo <<= version { (v: String) =>
-  val nexus = "https://oss.sonatype.org/"
-  if (v.trim.endsWith("SNAPSHOT")) Some("snapshots" at nexus + "content/repositories/snapshots")
-  else                             Some("releases"  at nexus + "service/local/staging/deploy/maven2")
+publishTo := {
+  if (isSnapshot.value)
+    Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
+  else
+    Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
 }
+
+credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
 scalacOptions := Seq("-deprecation")
 
