@@ -35,14 +35,33 @@ object ScalaMapValueResolver extends ValueResolver {
 object CaseClassValueResolver extends ValueResolver {
 
   override def resolve(context: scala.Any, name: String): AnyRef = {
-    ValueResolver.UNRESOLVED
-  }
-
-  override def propertySet(context: scala.Any): jSet[jMap.Entry[String, AnyRef]] = {
-    java.util.Collections.emptySet()
+    context match {
+      case product:Product =>
+        productAsMap(product)
+          .get(name)
+          .map(_.asInstanceOf[AnyRef])
+          .getOrElse(ValueResolver.UNRESOLVED)
+      case _=> ValueResolver.UNRESOLVED
+    }
   }
 
   override def resolve(context: scala.Any): AnyRef = {
     ValueResolver.UNRESOLVED
   }
+
+  override def propertySet(context: scala.Any): jSet[jMap.Entry[String, AnyRef]] = {
+    context match {
+      case product:Product =>
+        productAsMap(product)
+          .asJava
+          .entrySet().asInstanceOf[jSet[jMap.Entry[String, AnyRef]]]
+      case _=> java.util.Collections.emptySet()
+    }
+  }
+
+  private def productAsMap(product:Product): Map[String, Any] =
+    product.getClass.getDeclaredFields
+      .map(_.getName)
+      .zip(product.productIterator.toList).toMap
+
 }

@@ -105,7 +105,18 @@ object HBS {
    * @return
    */
   def apply(templatePath: String, attributes: (String, Any)*): Html = {
-    apply(templatePath, attributes.toMap)
+    generate(templatePath, attributes.toMap)
+  }
+
+
+  /**
+   *
+   * @param templatePath
+   * @param attributes
+   * @return
+   */
+  def withProduct(templatePath: String, attributes: Product, charset: String = "utf-8"): Html = {
+    generate(templatePath, attributes)
   }
 
 
@@ -117,7 +128,18 @@ object HBS {
    * @return
    */
   def apply(templatePath: String, attributes: Map[String, Any] = Map.empty, charset: String = "utf-8"): Html = {
+    generate(templatePath, attributes.toMap, charset)
+  }
 
+
+  /**
+   *
+   * @param templatePath
+   * @param attributes
+   * @param charset
+   * @return
+   */
+  private def generate(templatePath: String, attributes: Any = Map.empty, charset: String = "utf-8"): Html = {
     def compile = engine.handlebars.compile(templatePath)
 
     // Get the cache from the cache or just compile.

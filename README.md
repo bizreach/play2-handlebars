@@ -1,51 +1,69 @@
 play2-handlebars
 ================
 
-Play framework plugin for handlebars.java
+## Play framework plugin for handlebars.java
+
+play2-handlebars is a tiny play framework plugin to generate html and other test output from Hanldebars template. It also provides some helper features for Scala specific processing.
+
+- Generate HTML text by HBS object
+- Receive Case Class and Map object as parameters
+- Cache compiled Handlebars templates
+- Aware of Development/Production mode
+
+```scala
+
+object Application extends Controller {
+
+  def simple = Action {
+    Ok(HBS("simple", "who" -> "World"))
+  }
+
+}
+```
 
 
-## Pros and Cons
+## Twirl vs Handlebars
 
-### Pros
+The reasons why we have created this plugins are :
 
-- Knowledge sharing between frontend and backend:
-  - Reuse or migrate Handlebars template without any changes
-  - Frontend developers do not need to learn any new technologies
-- Quick reloading: 
--
+- **Handlebars reloads much faster**. Twirl is a great framework and we can detect many error things in the compilation time and makes refactoring easy. But sometimes that's too much, we just want to add CSS class. 
 
-### Cons
+- **Knowledge sharing between frontend and backend**. Handlebars is one of the most popular template libraries in JavaScript side also. Handlebars.java used in this plugin is also great and matured. We believe that front-end engineers and UI designers get understood soon without any new knowledge like Scala.
 
-- loss of type safety: Cannot detect file existence, parameter mapping and other things unless the request is not called.
-  - parameter
-  - routing
-- Sometimes the grammer conflicts with other formats such as AngularJS. 
--
+- But sometimes Handlebars' grammer conflicts with other formats such as AngularJS.
+ 
+- But you cannot know any template issues before first access. No type safe accesses.
+
 
 ## Getting Started
 
-### Add a dependency in your build setting
+### 1. Add a dependency in `project/Build.scala`
+
+Create a new play application and update Build.scala. Specify `0.1.0` (Latest Stable) or `0.2-SNAPSHOT` (Latest Development) for the version part.
+
 
 ```scala
-libraryDependencies ++= Seq(
-  "jp.co.bizreach" %% "play2-handlebars" % "0.1-SNAPSHOT"
+libraryDependencies += Seq(
+  "jp.co.bizreach" %% "play2-handlebars" % "0.1"
 )
 ```
 
-### Add a line in the plugin configuration 
+
+### 2. Add a line in `conf/play.plugins` 
 
 ```
 1000:jp.co.bizreach.play2handlebars.HandlebarsPlugin
 ```
 
-### Add a template in -views/simple.hbs-
+### 3. Add a template in `views/simple.hbs`
 
 ```
 Hello {{who}}!
 ```
 
-### Use HBS object instead of Twirl template in your controller  
+### 4. Use HBS object instead of Twirl in controller  
 
+```scala
 package controllers
 
 import play.api.mvc._
@@ -58,13 +76,23 @@ object Application extends Controller {
   }
 
 }
+```
+
+Remember to update `rotues` file.
+
+### 5. Finally, open your browser.
+
+```
+Hello World!
+```
 
 ## Configuration
 
-TODO
+Add configuration in `conf/application.conf` if needed like the below.
 
+```yaml
 play2handlebars {
-  root = "/app/views"
+  root = "/app/hbs-views"
   enableCache = false
   useClassLoaderTemplate = false
   helpers = [
@@ -72,17 +100,57 @@ play2handlebars {
     "helpers.HelperSourceEn"
   ]
 }
+```
 
-### Change views location
+| Property name  | How to set | Default |
+| ------------- | ------------- | ------------- |
+| play2handlebars.root  | The root path of the views. | `/app/views`  |
+| play2handlebars.enableCache  | If compiled tamplates are cached of not. The default value depends on the mode| `true` in Development/Test, `false` in Production |
+| play2handlebars.useClassLoaderTemplate | If true, `ClassPathTemplateLoader` is used if false, `FileTemplateLoader` is used. The default value depends on the mode  | `false` in Development/Test, `true` in Production |
+| play2handlebars.helpers| List of helpers. See [HelperSource](https://github.com/jknack/handlebars.java#using-a-helpersource) section of Handlebars.java | empty list | 
 
-### Choose the template loader
+## Usage
 
-### Add Handlebars helpers
+### Helpers
+
+Helper feature which exist both in Java and JavaScript implementation is useful. In Handlebars.java, you can register objects and class instances which have public methods.
+
+For example, create `HelperSourceJa` and add into the configuration, 
+
+```scala
+object HelperSourceJa {
+
+  def WithSan(value: String):String =
+    value + "-san"
+
+}
+```
+
+Also set in templates:
+
+```
+Hello {{WithMr who}}!
+```
+
+Then you will see:
+
+```
+Hello World-san!
+```
+
+
+## Sample Application
+
+See `src/test/play2-handlebars-sample`
 
 ## Releases
 
-No release versions have been published yet. Wait a while.
+| Version | Description |
+| ------- | ----------- |
+| 0.1     | Scala `2.10` / `2.11` are supported. Initial release. |
 
 ## Appendix
 
 ### Cheat Sheet of Handlebars.java in Scala 
+
+TODO
