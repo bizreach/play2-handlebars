@@ -20,7 +20,7 @@ object ApplicationBuild extends Build {
 //      unmanagedSourceDirectories := Seq(file("src/main/scala")),
 //      unmanagedJars in Compile ++= Seq(file("../play2-handlebars/target/scala-2.11/play2-handlebars_2.11-0.0.1.jar")),
       libraryDependencies ++= Seq(
-        "jp.co.bizreach" %% "play2-handlebars" % "0.1.0"
+        "jp.co.bizreach" %% "play2-handlebars" % "0.2-SNAPSHOT"
       )
     )
 

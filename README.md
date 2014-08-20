@@ -44,7 +44,7 @@ Create a new play application and update Build.scala. Specify `0.1.0` (Latest St
 
 ```scala
 libraryDependencies += Seq(
-  "jp.co.bizreach" %% "play2-handlebars" % "0.1"
+  "jp.co.bizreach" %% "play2-handlebars" % "0.2-SNAPSHOT"
 )
 ```
 
