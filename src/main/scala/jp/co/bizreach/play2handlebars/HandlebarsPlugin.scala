@@ -116,9 +116,19 @@ object HBS {
    * @return
    */
   def withProduct(templatePath: String, attributes: Product, charset: String = "utf-8"): Html = {
-    generate(templatePath, attributes)
+    generate(templatePath, attributes, charset)
   }
 
+
+  /**
+   *
+   * @param templatePath
+   * @param attributes
+   * @return
+   */
+  def any(templatePath: String, attributes: Any, charset: String = "utf-8"): Html = {
+    generate(templatePath, attributes, charset)
+  }
 
   /**
    *
@@ -150,7 +160,9 @@ object HBS {
         compile
 
     // Add several resolvers for scala
-    val resolvers = ValueResolver.VALUE_RESOLVERS ++ Array(ScalaMapValueResolver, CaseClassValueResolver)
+    val resolvers = ValueResolver.VALUE_RESOLVERS ++
+      Array(ScalaMapValueResolver, CaseClassValueResolver, JsonNodeValueResolver.INSTANCE)
+
     val context = Context
       .newBuilder(attributes)
       .resolver(resolvers:_*)

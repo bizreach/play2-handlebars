@@ -35,7 +35,12 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
             Map("foo" -> "Foo", "bar" -> 123 )).toString === "Hello Foo and 123!")
         }
       }
-    }
+      it("should extract values with any method") {
+        runApp(PlayApp()) { app =>
+          assert(HBS.any("test-template2",
+            Map("foo" -> "Foo", "bar" -> 123 )).toString === "Hello Foo and 123!")
+        }
+      }    }
   }
 
 
