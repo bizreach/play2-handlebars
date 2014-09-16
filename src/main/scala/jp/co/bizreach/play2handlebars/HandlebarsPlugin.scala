@@ -35,7 +35,12 @@ class HandlebarsPlugin(app: Application) extends Plugin {
     val useClassPathLoader = app.configuration.getBoolean(confBasePath + ".useClassPathLoader").getOrElse(Play.isProd(current))
     val enableCache = app.configuration.getBoolean(confBasePath + ".enableCache").getOrElse(Play.isProd(current))
     val handlebars = new Handlebars(createLoader(useClassPathLoader, rootPath))
-    
+
+    /**
+     * Override the default {{#each}} helper for java.lang.Iterable to recognize scala.Iterable
+     */
+    handlebars.registerHelper(EachHelper4S.NAME, EachHelper4S.INSTANCE)
+
     instantiateHelpers()
     
     def instantiateHelpers() = {

@@ -93,8 +93,9 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
 
           assert(HBS.withProduct("test-template-nested",
             Person("Minami", Address("Kyoto"))).toString === "Hello Minami. Welcome to Kyoto")
-          }
+        }
       }
     }
   }
+
 }
