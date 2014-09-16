@@ -15,13 +15,6 @@ class HelpersSpec extends FunSpec with FakePlayHelper {
 
           assert(HBS("test-template-each", "list" -> sList).toString === "Hello FooBar!")
         }
-
-        //        val context = Context
-        //          .newBuilder(Map("someKey" -> "someValue"))
-        //          .resolver(ScalaMapValueResolver)
-        //          .build()
-        //
-        //        assert(context.get("someKey") === "someValue")
       }
     }
 
