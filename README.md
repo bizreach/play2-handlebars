@@ -3,7 +3,7 @@ play2-handlebars
 
 ## Play framework plugin for handlebars.java
 
-play2-handlebars is a tiny play framework plugin to generate html and other test output from Hanldebars template. It also provides some helper features for Scala specific processing.
+play2-handlebars is a tiny play framework plugin to generate html and other test output from `Hanldebars` template. It also provides some helper features for Scala specific processing.
 
 - Generate HTML text by HBS object
 - Receive Case Class and Map object as parameters
@@ -46,6 +46,15 @@ Create a new play application and update Build.scala. Specify `0.1.0` (Latest St
 libraryDependencies += Seq(
   "jp.co.bizreach" %% "play2-handlebars" % "0.2-SNAPSHOT"
 )
+```
+
+If you choose SNAPSHOT versions, add a resolver also like the below.
+
+```scala
+resolvers ++= Seq(
+  "Maven Central Snapshots" at "https://oss.sonatype.org/content/repositories/snapshots"
+)
+
 ```
 
 
@@ -94,7 +103,7 @@ Add configuration in `conf/application.conf` if needed like the below.
 play2handlebars {
   root = "/app/hbs-views"
   enableCache = false
-  useClassLoaderTemplate = false
+  useClassPathLoader = false
   helpers = [
     "helpers.HelperSourceJa"
     "helpers.HelperSourceEn"
@@ -106,12 +115,11 @@ play2handlebars {
 | ------------- | ------------- | ------------- |
 | play2handlebars.root  | The root path of the views. | `/app/views`  |
 | play2handlebars.enableCache  | If compiled tamplates are cached of not. The default value depends on the mode| `true` in Development/Test, `false` in Production |
-| play2handlebars.useClassLoaderTemplate | If true, `ClassPathTemplateLoader` is used if false, `FileTemplateLoader` is used. The default value depends on the mode  | `false` in Development/Test, `true` in Production |
+| play2handlebars.useClassPathLoader | If true, `ClassPathTemplateLoader` is used if false, `FileTemplateLoader` is used. The default value depends on the mode  | `false` in Development/Test, `true` in Production |
 | play2handlebars.helpers| List of helpers. See [HelperSource](https://github.com/jknack/handlebars.java#using-a-helpersource) section of Handlebars.java | empty list | 
 
-## Usage
 
-### Helpers
+## Helpers
 
 Helper feature which exist both in Java and JavaScript implementation is useful. In Handlebars.java, you can register objects and class instances which have public methods.
 
@@ -139,6 +147,46 @@ Hello World-san!
 ```
 
 
+## Deployment
+
+In `Development` mode, play2-handlebars reads template files based on relative file directory position. On the other hand,
+in `Production` mode, it reads them inside class paths. Although you can change that by specifying `useClassPathLoader`,
+you might need to configure a few things in `Build.scala`.
+
+This may not be the best solution, but let me show our solution in our products. See the complete sample in the sample application.
+
+```scala
+object ApplicationBuild extends Build {
+
+  // This code derives from play.PlayCommands trait
+  // To skip unexpected reloading when static files and template files change
+  // This unexpected phenomenon has started happening since unmanagedResourceDirectories is added.
+  // Here, resources are removed from the original code
+  val playMonitoredFilesTask = (thisProjectRef, state) map { (ref, state) =>
+    val src = Play.inAllDependencies(ref, unmanagedSourceDirectories in Compile, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
+    val assets = Play.inAllDependencies(ref, unmanagedSourceDirectories in Assets, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
+    val public = Play.inAllDependencies(ref, unmanagedResourceDirectories in Assets, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
+    (src ++ assets ++ public).map { f =>
+      if (!f.exists) f.mkdirs(); f
+    }.map(_.getCanonicalPath).distinct
+  }
+
+  lazy val main = Project("root", file("."))
+    .enablePlugins(play.PlayScala)
+    .settings(
+
+      // To include in the class path
+      unmanagedResourceDirectories in Compile += baseDirectory.value / "resources",
+
+      //...
+
+    )
+}
+
+```
+
+
+
 ## Sample Application
 
 See `src/test/play2-handlebars-sample`
@@ -148,9 +196,16 @@ See `src/test/play2-handlebars-sample`
 | Version | Description |
 | ------- | ----------- |
 | 0.1     | Scala `2.10` / `2.11` are supported. Initial release. |
+| 0.2     | Added JSON resolver as default, and updated several small things. |
 
 ## Appendix
+
+### Other solutions 
+
+We have chosen the stable product, `hanldebars.java`, 
+but [handlebars.scala](https://github.com/mwunsch/handlebars.scala) looks another great hanlebars fork for Scala developers.
 
 ### Cheat Sheet of Handlebars.java in Scala 
 
 TODO
+
