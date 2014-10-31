@@ -203,7 +203,7 @@ See `src/test/play2-handlebars-sample`
 ### Other solutions 
 
 We have chosen the stable product, `hanldebars.java`, 
-but [handlebars.scala](https://github.com/mwunsch/handlebars.scala) looks another great hanlebars fork for Scala developers.
+but [handlebars.scala](https://github.com/mwunsch/handlebars.scala) looks a great hanlebars fork for Scala developers.
 
 ### Cheat Sheet of Handlebars.java in Scala 
 
