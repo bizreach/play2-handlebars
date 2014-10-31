@@ -98,4 +98,29 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
     }
   }
 
+
+  describe("Handlebars Option resolver") {
+    describe("when Option is some") {
+      it("should write the inside value") {
+        runApp(PlayApp()) { app =>
+
+          assert(HBS("test-template1",
+            Map("who" -> Some("World"))).toString === "Hello World!")
+
+          assert(HBS("test-template1",
+            Map("who" -> Some(123))).toString === "Hello 123!")
+        }
+      }
+
+      describe("when Option is none") {
+        it("should write no values") {
+          runApp(PlayApp()) { app =>
+
+            assert(HBS("test-template1",
+              Map("who" -> None)).toString === "Hello !")
+          }
+        }
+      }
+    }
+  }
 }

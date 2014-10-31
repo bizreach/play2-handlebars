@@ -166,7 +166,10 @@ object HBS {
 
     // Add several resolvers for scala
     val resolvers = ValueResolver.VALUE_RESOLVERS ++
-      Array(ScalaMapValueResolver, CaseClassValueResolver, JsonNodeValueResolver.INSTANCE)
+      Array(
+        ScalaMapValueResolver,
+        CaseClassValueResolver,
+        JsonNodeValueResolver.INSTANCE)
 
     val context = Context
       .newBuilder(attributes)
