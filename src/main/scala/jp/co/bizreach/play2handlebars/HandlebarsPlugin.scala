@@ -1,6 +1,8 @@
 package jp.co.bizreach.play2handlebars
 
 
+import javax.inject.Inject
+
 import com.github.jknack.handlebars.Handlebars.SafeString
 import com.github.jknack.handlebars.io.{ClassPathTemplateLoader, FileTemplateLoader}
 import com.github.jknack.handlebars._
@@ -16,7 +18,7 @@ import scala.collection.JavaConverters._
 /**
  * HandlebarsPlugin initializes handlebars.java configuration and keep the engine's singleton
  */
-class HandlebarsPlugin(app: Application) extends Plugin {
+class HandlebarsPlugin @Inject() (app: Application) extends Plugin {
 
   private lazy val logger = Logger("jp.co.bizreach.play2handlebars.HandlebarsPlugin")
 

@@ -14,6 +14,7 @@ libraryDependencies ++= Seq(
   "com.typesafe.play"  %% "play"                 % "2.3.3"    % "provided",
   "com.github.jknack"   % "handlebars"           % "1.3.1",
   "com.github.jknack"   % "handlebars-jackson2"  % "1.3.1",
+  "com.google.inject"   % "guice"                % "4.0",
   "org.scalatest"      %% "scalatest"            % "2.2.1"    % "test",
   "org.mockito"         % "mockito-all"          % "1.9.5"    % "test",
   "com.typesafe.play"  %% "play-test"            % "2.3.3"    % "test"
