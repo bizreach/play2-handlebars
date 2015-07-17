@@ -2,21 +2,21 @@ name := "play2-handlebars"
 
 organization := "jp.co.bizreach"
 
-version := "0.3-SNAPSHOT"
+version := "0.3.0"
 
-scalaVersion := "2.11.2"
+scalaVersion := "2.11.7"
 
-crossScalaVersions := Seq("2.10.3", "2.11.2")
+crossScalaVersions := Seq("2.10.5", "2.11.7")
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play"  %% "play"                 % "2.3.3"    % "provided",
-  "com.github.jknack"   % "handlebars"           % "1.3.1",
-  "com.github.jknack"   % "handlebars-jackson2"  % "1.3.1",
-  "org.scalatest"      %% "scalatest"            % "2.2.1"    % "test",
+  "com.typesafe.play"  %% "play"                 % "2.4.2"    % "provided",
+  "com.github.jknack"   % "handlebars"           % "1.3.2",
+  "com.github.jknack"   % "handlebars-jackson2"  % "1.3.2",
+  "org.scalatest"      %% "scalatest"            % "2.2.4"    % "test",
   "org.mockito"         % "mockito-all"          % "1.9.5"    % "test",
-  "com.typesafe.play"  %% "play-test"            % "2.3.3"    % "test"
+  "com.typesafe.play"  %% "play-test"            % "2.4.2"    % "test"
 )
 
 publishMavenStyle := true

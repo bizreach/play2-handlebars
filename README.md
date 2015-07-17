@@ -21,7 +21,6 @@ object Application extends Controller {
 }
 ```
 
-
 ## Twirl vs Handlebars
 
 The reasons why we have created this plugins are :
@@ -42,9 +41,19 @@ The reasons why we have created this plugins are :
 Create a new play application and update Build.scala. Specify `0.1.0` (Latest Stable) or `0.2-SNAPSHOT` (Latest Development) for the version part.
 
 
+#### Play 2.4
+
 ```scala
 libraryDependencies += Seq(
-  "jp.co.bizreach" %% "play2-handlebars" % "0.2-SNAPSHOT"
+  "jp.co.bizreach" %% "play2-handlebars" % "0.3.0"
+)
+```
+  
+#### Play 2.3
+
+```scala
+libraryDependencies += Seq(
+  "jp.co.bizreach" %% "play2-handlebars" % "0.2.0"
 )
 ```
 
@@ -58,11 +67,24 @@ resolvers ++= Seq(
 ```
 
 
-### 2. Add a line in `conf/play.plugins` 
+### 2. Add a line in the configuration file
+
+#### Play 2.4
+
+Add a line in `conf/application.conf`
+
+```
+play.modules.enabled += "jp.co.bizreach.play2handlebars.HandlebarsModule"
+```
+
+#### Play 2.3
+
+Add a line in `conf/play.plugins`
 
 ```
 1000:jp.co.bizreach.play2handlebars.HandlebarsPlugin
 ```
+
 
 ### 3. Add a template in `views/simple.hbs`
 
@@ -197,6 +219,7 @@ See `src/test/play2-handlebars-sample`
 | ------- | ----------- |
 | 0.1     | Scala `2.10` / `2.11` are supported. Initial release. |
 | 0.2     | Added JSON resolver as default, and updated several small things. |
+| 0.3     | Updated the initialization part for Play 2.4 |
 
 ## Appendix
 
@@ -205,7 +228,4 @@ See `src/test/play2-handlebars-sample`
 We have chosen the stable product, `hanldebars.java`, 
 but [handlebars.scala](https://github.com/mwunsch/handlebars.scala) looks a great hanlebars fork for Scala developers.
 
-### Cheat Sheet of Handlebars.java in Scala 
-
-TODO
 

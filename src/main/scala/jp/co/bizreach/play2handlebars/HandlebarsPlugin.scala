@@ -1,24 +1,55 @@
 package jp.co.bizreach.play2handlebars
 
 
+import javax.inject._
+
 import com.github.jknack.handlebars.Handlebars.SafeString
 import com.github.jknack.handlebars.io.{ClassPathTemplateLoader, FileTemplateLoader}
 import com.github.jknack.handlebars._
-import play.api.{Play, Plugin, Application, Logger}
+import play.api.inject.{Binding, Module, ApplicationLifecycle}
+import play.api._
 import play.twirl.api.{HtmlFormat, Html}
-
-import play.api.Play.current
 
 import scala.collection.concurrent.TrieMap
 import scala.collection.JavaConverters._
+import scala.concurrent.Future
+import scala.concurrent.ExecutionContext.Implicits.global
+
+/**
+ * Handlebars Module for Play 2.4 application
+ */
+class HandlebarsModule extends Module {
+  def bindings(environment: Environment, configuration: Configuration): Seq[Binding[HandlebarsPlugin]] =
+    Seq(
+      bind[HandlebarsPlugin].toProvider[HandlebarsProvider].eagerly()
+    )
+}
 
 
 /**
  * HandlebarsPlugin initializes handlebars.java configuration and keep the engine's singleton
  */
-class HandlebarsPlugin(app: Application) extends Plugin {
+@Singleton
+class HandlebarsProvider @Inject() (app: Application, lifecycle: ApplicationLifecycle) extends Provider[HandlebarsPlugin] {
 
-  private lazy val logger = Logger("jp.co.bizreach.play2handlebars.HandlebarsPlugin")
+  private lazy val logger = Logger(this.getClass)
+
+  lazy val get: HandlebarsPlugin = new HandlebarsPlugin(app)
+
+  /**
+   * Shutdown the engine
+   */
+  lifecycle.addStopHook { () =>
+    Future {
+      logger.info("Handlebars plugin is shutting down")
+    }
+  }
+}
+
+
+class HandlebarsPlugin(app: Application) {
+
+  private lazy val logger = Logger(this.getClass)
 
   private val confBasePath = "play2handlebars"
 
@@ -32,8 +63,8 @@ class HandlebarsPlugin(app: Application) extends Plugin {
   lazy val engine = new Engine {
     val templates = TrieMap[String, Template]()
     val rootPath = app.configuration.getString(confBasePath + ".root").getOrElse("/app/views")
-    val useClassPathLoader = app.configuration.getBoolean(confBasePath + ".useClassPathLoader").getOrElse(Play.isProd(current))
-    val enableCache = app.configuration.getBoolean(confBasePath + ".enableCache").getOrElse(Play.isProd(current))
+    val useClassPathLoader = app.configuration.getBoolean(confBasePath + ".useClassPathLoader").getOrElse(Play.isProd(app))
+    val enableCache = app.configuration.getBoolean(confBasePath + ".enableCache").getOrElse(Play.isProd(app))
     val handlebars = new Handlebars(createLoader(useClassPathLoader, rootPath))
 
     /**
@@ -44,19 +75,6 @@ class HandlebarsPlugin(app: Application) extends Plugin {
     instantiateHelpers()
     
     def instantiateHelpers() = {
-//      val helperClasses = app.configuration.getConfig(confBasePath + ".helpers")
-//      val classloader = Thread.currentThread.getContextClassLoader
-//      def instantiateHelper(key: String, className: String) = {
-//        val helper = classloader.loadClass(className).asInstanceOf[Helper[String]]
-//        handlebars.registerHelper(key, helper)
-//        (key, helper)
-//      }
-//
-//      helperClasses.map(cfg => {
-//        cfg.subKeys.map(key =>
-//          instantiateHelper(key, cfg.getString(key).get)
-//        ).toMap
-//      }).getOrElse(Map.empty)
       val helperClasses = app.configuration.getStringList(confBasePath + ".helpers")
       val classloader = Thread.currentThread.getContextClassLoader
 
@@ -72,18 +90,10 @@ class HandlebarsPlugin(app: Application) extends Plugin {
 
 
   /**
-   * Initiate the engine
+   * Initiate the engine (Hmm ...)
    */
-  override def onStart(): Unit = {
-    engine
-    logger.info("Handlebars plugin is started")
-  }
-
-  override def onStop(): Unit = {
-    logger.info("Handlebars plugin is shutting down")
-  }
-
-  override def enabled: Boolean = true
+  new HBS(engine)
+  logger.info("Handlebars plugin is started")
 
 
   private def createLoader(isClassPath:Boolean, rootPath:String) =
@@ -99,10 +109,47 @@ class HandlebarsPlugin(app: Application) extends Plugin {
 
 
 /**
+ * This is just a small class to be used only for DI
+ */
+class HBS(private[HBS] val engine: HandlebarsPlugin#Engine) {
+  HBS.injectMe(this)
+}
+
+
+/**
  *
  */
 object HBS {
 
+  private lazy val logger = Logger(this.getClass)
+
+  /**
+   * Object HBS has an instance of HBS which has the Handlebars engine.
+   * Since Play's DI cannot combine with Scala's object, this "var" variable is used.
+   */
+  private[this] var hbs:Option[HBS] = None
+
+
+  /**
+   * Inject an instance of HBS to set the Handlebars engine. This can be called only once.
+   */
+  private[HBS] def injectMe(hbs:HBS): Unit = {
+    this.hbs match {
+      case Some(_) => logger.warn("HandlebarsPlugin is instantiated multiple times")
+      case None =>
+    }
+    this.hbs = Some(hbs)
+  }
+
+
+  /**
+   * Get the engine. If this is not injected, throws an exception.
+   */
+  def engine: HandlebarsPlugin#Engine = {
+    hbs.map(_.engine).getOrElse(throw new IllegalStateException("HandlebarsPlugin is not installed"))
+  }
+
+  
   /**
    * Just a shorthand for Tuple2 attribute values
    * @param templatePath
@@ -196,7 +243,4 @@ object HBS {
   def toJavaMap[A <: Product](product:A):java.util.Map[String, Any] =
     product.getClass.getDeclaredFields.map(_.getName).zip(product.productIterator.toList).toMap.asJava
 
-
-  private[play2handlebars] def engine = current.plugin[HandlebarsPlugin].map(_.engine)
-    .getOrElse(throw new IllegalStateException("HandlebarsPlugin is not installed"))
 }

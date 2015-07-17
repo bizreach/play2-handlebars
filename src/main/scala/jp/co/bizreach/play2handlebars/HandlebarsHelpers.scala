@@ -2,9 +2,7 @@ package jp.co.bizreach.play2handlebars
 
 import com.github.jknack.handlebars.helper.EachHelper
 import com.github.jknack.handlebars.Options
-import play.api.i18n.Messages
-
-import java.util.{Set => jSet, Map => jMap}
+//import play.api.i18n.Messages
 
 
 /**
@@ -12,9 +10,9 @@ import java.util.{Set => jSet, Map => jMap}
  */
 object HandlebarsHelpers {
 
-  def playI18n(s:String):String = {
-    Messages(s)
-  }
+//  def playI18n(s:String):String = {
+//    Messages(s)
+//  }
 
 }
 
