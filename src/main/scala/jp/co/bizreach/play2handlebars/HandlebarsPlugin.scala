@@ -30,11 +30,11 @@ class HandlebarsModule extends Module {
  * HandlebarsPlugin initializes handlebars.java configuration and keep the engine's singleton
  */
 @Singleton
-class HandlebarsProvider @Inject() (app: Application, lifecycle: ApplicationLifecycle) extends Provider[HandlebarsPlugin] {
+class HandlebarsProvider @Inject() (configuration: Configuration, environment: Environment, lifecycle: ApplicationLifecycle) extends Provider[HandlebarsPlugin] {
 
   private lazy val logger = Logger(this.getClass)
 
-  lazy val get: HandlebarsPlugin = new HandlebarsPlugin(app)
+  lazy val get: HandlebarsPlugin = new HandlebarsPlugin(configuration, environment)
 
   /**
    * Shutdown the engine
@@ -47,9 +47,11 @@ class HandlebarsProvider @Inject() (app: Application, lifecycle: ApplicationLife
 }
 
 
-class HandlebarsPlugin(app: Application) {
+class HandlebarsPlugin(configuration: Configuration, environment: Environment) {
 
   private lazy val logger = Logger(this.getClass)
+
+  private lazy val isProd: Boolean = environment.mode == Mode.Prod
 
   private val confBasePath = "play2handlebars"
 
@@ -62,9 +64,9 @@ class HandlebarsPlugin(app: Application) {
 
   lazy val engine = new Engine {
     val templates = TrieMap[String, Template]()
-    val rootPath = app.configuration.getString(confBasePath + ".root").getOrElse("/app/views")
-    val useClassPathLoader = app.configuration.getBoolean(confBasePath + ".useClassPathLoader").getOrElse(Play.isProd(app))
-    val enableCache = app.configuration.getBoolean(confBasePath + ".enableCache").getOrElse(Play.isProd(app))
+    val rootPath = configuration.getString(confBasePath + ".root").getOrElse("/app/views")
+    val useClassPathLoader = configuration.getBoolean(confBasePath + ".useClassPathLoader").getOrElse(isProd)
+    val enableCache = configuration.getBoolean(confBasePath + ".enableCache").getOrElse(isProd)
     val handlebars = new Handlebars(createLoader(useClassPathLoader, rootPath))
 
     /**
@@ -75,7 +77,7 @@ class HandlebarsPlugin(app: Application) {
     instantiateHelpers()
     
     def instantiateHelpers() = {
-      val helperClasses = app.configuration.getStringList(confBasePath + ".helpers")
+      val helperClasses = configuration.getStringList(confBasePath + ".helpers")
       val classloader = Thread.currentThread.getContextClassLoader
 
       def instantiateHelper(className: String) = {
