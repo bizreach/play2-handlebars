@@ -16,7 +16,16 @@ import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
 
 /**
- * Handlebars Module for Play 2.4 application
+ * Handlebars components for compile time dependency injection in Play 2.4 application
+ */
+trait HandlebarsComponents {
+  def configuration: Configuration
+  def environment: Environment
+  val handlebarsPlugin = new HandlebarsPlugin(configuration, environment)
+}
+
+/**
+ * Handlebars Module for runtime dependency injection in Play 2.4 application
  */
 class HandlebarsModule extends Module {
   def bindings(environment: Environment, configuration: Configuration): Seq[Binding[HandlebarsPlugin]] =

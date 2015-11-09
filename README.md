@@ -67,14 +67,29 @@ resolvers ++= Seq(
 ```
 
 
-### 2. Add a line in the configuration file
+### 2. Add the plugin to your application
 
-#### Play 2.4
+#### Play 2.4 runtime dependency injection
 
 Add a line in `conf/application.conf`
 
 ```
 play.modules.enabled += "jp.co.bizreach.play2handlebars.HandlebarsModule"
+```
+
+#### Play 2.4 compile time dependency injection
+
+Extend your application's components with `jp.co.bizreach.play2handlebars.HandlebarsComponents` in your `ApplicationLoader`.
+
+``` scala
+import jp.co.bizreach.play2handlebars.HandlebarsComponents
+
+class MyApplicationLoader extends ApplicationLoader {
+  override def load(context: Context) = new MyAppComponents(context).application
+}
+
+class MyAppComponents(context: Context) extends BuiltInComponentsFromContext(context) with HandlebarsComponents
+
 ```
 
 #### Play 2.3
