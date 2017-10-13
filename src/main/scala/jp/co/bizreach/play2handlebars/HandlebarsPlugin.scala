@@ -6,17 +6,18 @@ import javax.inject._
 import com.github.jknack.handlebars.Handlebars.SafeString
 import com.github.jknack.handlebars.io.{ClassPathTemplateLoader, FileTemplateLoader}
 import com.github.jknack.handlebars._
-import play.api.inject.{Binding, Module, ApplicationLifecycle}
+import play.api.inject.{ApplicationLifecycle, Binding, Module}
 import play.api._
-import play.twirl.api.{HtmlFormat, Html}
-
+import play.twirl.api.{Html, HtmlFormat}
 import scala.collection.concurrent.TrieMap
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.util.Try
 
 /**
- * Handlebars components for compile time dependency injection in Play 2.4 application
+ * Handlebars components for compile time dependency injection
  */
 trait HandlebarsComponents {
   def configuration: Configuration
@@ -25,7 +26,7 @@ trait HandlebarsComponents {
 }
 
 /**
- * Handlebars Module for runtime dependency injection in Play 2.4 application
+ * Handlebars Module for runtime dependency injection
  */
 class HandlebarsModule extends Module {
   def bindings(environment: Environment, configuration: Configuration): Seq[Binding[HandlebarsPlugin]] =
@@ -73,9 +74,9 @@ class HandlebarsPlugin(configuration: Configuration, environment: Environment) {
 
   lazy val engine = new Engine {
     val templates = TrieMap[String, Template]()
-    val rootPath = configuration.getString(confBasePath + ".root").getOrElse("/app/views")
-    val useClassPathLoader = configuration.getBoolean(confBasePath + ".useClassPathLoader").getOrElse(isProd)
-    val enableCache = configuration.getBoolean(confBasePath + ".enableCache").getOrElse(isProd)
+    val rootPath = configuration.getOptional[String](confBasePath + ".root").getOrElse("/app/views")
+    val useClassPathLoader = configuration.getOptional[Boolean](confBasePath + ".useClassPathLoader").getOrElse(isProd)
+    val enableCache = configuration.getOptional[Boolean](confBasePath + ".enableCache").getOrElse(isProd)
     val handlebars = new Handlebars(createLoader(useClassPathLoader, rootPath))
 
     /**
@@ -86,7 +87,9 @@ class HandlebarsPlugin(configuration: Configuration, environment: Environment) {
     instantiateHelpers()
     
     def instantiateHelpers() = {
-      val helperClasses = configuration.getStringList(confBasePath + ".helpers")
+      val helperClasses =
+        Try(configuration.underlying.getStringList(confBasePath + ".helpers").asScala)
+          .getOrElse(mutable.Seq.empty)
       val classloader = Thread.currentThread.getContextClassLoader
 
       def instantiateHelper(className: String) = {
@@ -95,7 +98,7 @@ class HandlebarsPlugin(configuration: Configuration, environment: Environment) {
         helper
       }
 
-      helperClasses.foreach(list => list.asScala.foreach(clazz => instantiateHelper(clazz)))
+      helperClasses.foreach(clazz => instantiateHelper(clazz))
     }
   }
 
