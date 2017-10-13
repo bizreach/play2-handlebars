@@ -12,10 +12,10 @@ resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/release
 
 libraryDependencies ++= Seq(
   "com.typesafe.play"  %% "play"                 % "2.6.6"    % "provided",
-  "com.github.jknack"   % "handlebars"           % "1.3.2",
-  "com.github.jknack"   % "handlebars-jackson2"  % "1.3.2",
+  "com.github.jknack"   % "handlebars"           % "4.0.6",
+  "com.github.jknack"   % "handlebars-jackson2"  % "4.0.6",
   "org.scalatest"      %% "scalatest"            % "3.0.4"    % "test",
-  "org.mockito"         % "mockito-all"          % "1.9.5"    % "test",
+  "org.mockito"         % "mockito-core"         % "2.10.0"   % "test",
   "com.typesafe.play"  %% "play-test"            % "2.6.6"    % "test"
 )
 
