@@ -235,6 +235,7 @@ See `src/test/play2-handlebars-sample`
 | 0.1     | Scala `2.10` / `2.11` are supported. Initial release. |
 | 0.2     | Added JSON resolver as default, and updated several small things. |
 | 0.3     | Updated the initialization part for Play 2.4 |
+| 0.3.1   | Support for compile time DI |
 
 ## Appendix
 

@@ -11,7 +11,7 @@ libraryDependencies ++= Seq(
   cache,
   ws,
 
-  "jp.co.bizreach" %% "play2-handlebars" % "0.3.0",
+  "jp.co.bizreach" %% "play2-handlebars" % "0.3.1",
 
   specs2 % Test
 )

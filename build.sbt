@@ -2,7 +2,7 @@ name := "play2-handlebars"
 
 organization := "jp.co.bizreach"
 
-version := "0.3.0"
+version := "0.3.1"
 
 scalaVersion := "2.11.7"
 
