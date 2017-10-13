@@ -21,12 +21,12 @@ libraryDependencies ++= Seq(
 
 publishMavenStyle := true
 
-publishTo := {
+publishTo := Some(
   if (isSnapshot.value)
-    Some("snapshots" at "https://oss.sonatype.org/content/repositories/snapshots")
+    Opts.resolver.sonatypeSnapshots
   else
-    Some("releases" at "https://oss.sonatype.org/service/local/staging/deploy/maven2")
-}
+    Opts.resolver.sonatypeStaging
+)
 
 credentials += Credentials(Path.userHome / ".ivy2" / ".credentials")
 
@@ -35,6 +35,8 @@ scalacOptions := Seq("-deprecation")
 publishArtifact in Test := false
 
 pomIncludeRepository := { _ => false }
+
+sonatypeProfileName := "jp.co.bizreach"
 
 pomExtra := (
   <url>https://github.com/bizreach/play2-handlebars</url>

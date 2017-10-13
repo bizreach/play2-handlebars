@@ -21,7 +21,7 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
 
     describe("when the resolver receives a simple Map in Play application") {
       it("should extract values") {
-        runApp(PlayApp()) { app =>
+        runApp(PlayApp()) {
           assert(HBS("test-template2",
             Map("foo" -> "Foo", "bar" -> "Bar" )).toString === "Hello Foo and Bar!")
         }
@@ -30,13 +30,13 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
 
     describe("when the resolver receives a AnyVal Map in Play application") {
       it("should extract values") {
-        runApp(PlayApp()) { app =>
+        runApp(PlayApp()) {
           assert(HBS("test-template2",
             Map("foo" -> "Foo", "bar" -> 123 )).toString === "Hello Foo and 123!")
         }
       }
       it("should extract values with any method") {
-        runApp(PlayApp()) { app =>
+        runApp(PlayApp()) {
           assert(HBS.any("test-template2",
             Map("foo" -> "Foo", "bar" -> 123 )).toString === "Hello Foo and 123!")
         }
@@ -71,7 +71,7 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
 
     describe("when the case class is nested") {
       it("should extract the top layer values") {
-        runApp(PlayApp()) { app =>
+        runApp(PlayApp()) {
           case class Address(city:String, isValid:Boolean = true)
           case class Person(name:String, address:Address)
 
@@ -87,7 +87,7 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
       }
 
       it("should extract all the nested values in an application instance") {
-        runApp(PlayApp()) { app =>
+        runApp(PlayApp()) {
           case class Address(city:String, isValid:Boolean = true)
           case class Person(name:String, address:Address)
 
@@ -102,7 +102,7 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
   describe("Handlebars Option resolver") {
     describe("when Option is some") {
       it("should write the inside value") {
-        runApp(PlayApp()) { app =>
+        runApp(PlayApp()) {
 
           assert(HBS("test-template1",
             Map("who" -> Some("World"))).toString === "Hello World!")
@@ -114,7 +114,7 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
 
       describe("when Option is none") {
         it("should write no values") {
-          runApp(PlayApp()) { app =>
+          runApp(PlayApp()) {
 
             assert(HBS("test-template1",
               Map("who" -> None)).toString === "Hello !")
