@@ -1,10 +1,9 @@
 package controllers
 
-import play.api._
 import play.api.mvc._
 import jp.co.bizreach.play2handlebars.HBS
 
-class Application extends Controller {
+class Application extends InjectedController {
 
   def index = Action {
     Ok(views.html.index("Your new application is ready without play2-handlebars."))
@@ -12,12 +11,12 @@ class Application extends Controller {
 
   def indexHbs = Action {
     Ok(HBS("index",
-      "welcome" -> HBS.safeString(views.html.play20.welcome("Your new application is ready with play2-handlebars.")),
+      "welcome" -> "Your new application is ready with play2-handlebars.",
       "title" -> "Welcome to Play"))
   }
 
   def simple = Action {
-    Ok(HBS("simple", "who" -> "World"))
+    Ok(HBS("simple", "who" -> "World with 'WithMr' helper"))
   }
 
 }
