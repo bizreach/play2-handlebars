@@ -41,11 +41,19 @@ The reasons why we have created this plugins are :
 Create a new play application and update Build.scala. Specify `0.1.0` (Latest Stable) or `0.2-SNAPSHOT` (Latest Development) for the version part.
 
 
-#### Play 2.4
+#### Play 2.6
 
 ```scala
 libraryDependencies += Seq(
-  "jp.co.bizreach" %% "play2-handlebars" % "0.3.0"
+  "jp.co.bizreach" %% "play2-handlebars" % "0.4.0"
+)
+```
+
+#### Play 2.4 (2.5)
+
+```scala
+libraryDependencies += Seq(
+  "jp.co.bizreach" %% "play2-handlebars" % "0.3.1"
 )
 ```
   
@@ -69,7 +77,7 @@ resolvers ++= Seq(
 
 ### 2. Add the plugin to your application
 
-#### Play 2.4 runtime dependency injection
+#### Play 2.4(or higher) runtime dependency injection
 
 Add a line in `conf/application.conf`
 
@@ -77,7 +85,7 @@ Add a line in `conf/application.conf`
 play.modules.enabled += "jp.co.bizreach.play2handlebars.HandlebarsModule"
 ```
 
-#### Play 2.4 compile time dependency injection
+#### Play 2.4(or higher) compile time dependency injection
 
 Extend your application's components with `jp.co.bizreach.play2handlebars.HandlebarsComponents` in your `ApplicationLoader`.
 
@@ -232,16 +240,17 @@ See `src/test/play2-handlebars-sample`
 
 | Version | Description |
 | ------- | ----------- |
-| 0.1     | Scala `2.10` / `2.11` are supported. Initial release. |
-| 0.2     | Added JSON resolver as default, and updated several small things. |
-| 0.3     | Updated the initialization part for Play 2.4 |
+| 0.4.0   | Play `2.6` and Scala `2.12` support |
 | 0.3.1   | Support for compile time DI |
+| 0.3     | Updated the initialization part for Play 2.4 |
+| 0.2     | Added JSON resolver as default, and updated several small things. |
+| 0.1     | Scala `2.10` / `2.11` are supported. Initial release. |
 
 ## Appendix
 
 ### Other solutions 
 
 We have chosen the stable product, `hanldebars.java`, 
-but [handlebars.scala](https://github.com/mwunsch/handlebars.scala) looks a great hanlebars fork for Scala developers.
+but [handlebars.scala](https://github.com/mwunsch/handlebars.scala) looks a great hanlebars implementation for Scala developers.
 
 

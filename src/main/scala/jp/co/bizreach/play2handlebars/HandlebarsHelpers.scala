@@ -29,7 +29,7 @@ object EachHelper4S {
  */
 class EachHelper4S extends EachHelper {
   @SuppressWarnings(Array("rawtypes", "unchecked"))
-  override def apply(context: AnyRef, options: Options): CharSequence = {
+  override def apply(context: AnyRef, options: Options): Object = {
 
     context match {
       case ctx:Iterable[_] =>
