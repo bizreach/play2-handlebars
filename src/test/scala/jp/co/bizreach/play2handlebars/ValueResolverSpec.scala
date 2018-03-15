@@ -23,7 +23,7 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
       it("should extract values") {
         runApp(PlayApp()) {
           assert(HBS("test-template2",
-            Map("foo" -> "Foo", "bar" -> "Bar" )).toString === "Hello Foo and Bar!")
+            Map("foo" -> "Foo", "bar" -> "Bar")).toString === "Hello Foo and Bar!")
         }
       }
     }
@@ -32,22 +32,23 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
       it("should extract values") {
         runApp(PlayApp()) {
           assert(HBS("test-template2",
-            Map("foo" -> "Foo", "bar" -> 123 )).toString === "Hello Foo and 123!")
+            Map("foo" -> "Foo", "bar" -> 123)).toString === "Hello Foo and 123!")
         }
       }
       it("should extract values with any method") {
         runApp(PlayApp()) {
           assert(HBS.any("test-template2",
-            Map("foo" -> "Foo", "bar" -> 123 )).toString === "Hello Foo and 123!")
+            Map("foo" -> "Foo", "bar" -> 123)).toString === "Hello Foo and 123!")
         }
-      }    }
+      }
+    }
   }
 
 
   describe("Handlebars Scala Case Class / Tuple resolver") {
     describe("when the case class is simple") {
       it("should extract values") {
-        case class Person(name:String, age:Int)
+        case class Person(name: String, age: Int)
 
         val context = Context
           .newBuilder(Person("Minami", 38))
@@ -68,12 +69,26 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
       }
     }
 
+    describe("when the case class inherit sub class") {
+      it("should extract Sub Class's values") {
+        class Person(val name : String) {}
+        case class Programmer(language : String) extends Person("person")
+
+        val context = Context
+          .newBuilder(Programmer("Scala"))
+          .resolver(CaseClassValueResolver)
+          .build()
+
+        assert(context.get("name") === "person")
+      }
+    }
+
 
     describe("when the case class is nested") {
       it("should extract the top layer values") {
         runApp(PlayApp()) {
-          case class Address(city:String, isValid:Boolean = true)
-          case class Person(name:String, address:Address)
+          case class Address(city: String, isValid: Boolean = true)
+          case class Person(name: String, address: Address)
 
           val context = Context
             .newBuilder(Person("Minami", Address("Kyoto")))
@@ -88,16 +103,36 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
 
       it("should extract all the nested values in an application instance") {
         runApp(PlayApp()) {
-          case class Address(city:String, isValid:Boolean = true)
-          case class Person(name:String, address:Address)
+          case class Address(city: String, isValid: Boolean = true)
+          case class Person(name: String, address: Address)
 
           assert(HBS.withProduct("test-template-nested",
             Person("Minami", Address("Kyoto"))).toString === "Hello Minami. Welcome to Kyoto")
         }
       }
     }
-  }
 
+    describe("when the case class has 'lazy val' field") {
+      it("should extract the top layer values") {
+        runApp(PlayApp()) {
+          case class Address(city: String, isValid: Boolean = true)
+          case class Person(name: String, address: Address) {
+            lazy val families = List()
+          }
+
+          val context = Context
+            .newBuilder(Person("Minami", Address("Kyoto")))
+            .resolver(CaseClassValueResolver)
+            .build()
+
+          assert(context.get("name") === "Minami")
+          assert(context.get("address").isInstanceOf[Address])
+          assert(context.get("address").asInstanceOf[Address].city === "Kyoto")
+          assert(context.get("families") === List())
+        }
+      }
+    }
+  }
 
   describe("Handlebars Option resolver") {
     describe("when Option is some") {
