@@ -4,19 +4,19 @@ organization := "jp.co.bizreach"
 
 version := "0.4.1"
 
-scalaVersion := "2.12.3"
+scalaVersion := "2.12.4"
 
-crossScalaVersions := Seq("2.11.11", "2.12.3")
+crossScalaVersions := Seq("2.11.11", "2.12.4")
 
 resolvers += "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play"  %% "play"                 % "2.6.6"    % "provided",
+  "com.typesafe.play"  %% "play"                 % "2.6.7"    % "provided",
   "com.github.jknack"   % "handlebars"           % "4.0.6",
   "com.github.jknack"   % "handlebars-jackson2"  % "4.0.6",
-  "org.scalatest"      %% "scalatest"            % "3.0.4"    % "test",
-  "org.mockito"         % "mockito-core"         % "2.10.0"   % "test",
-  "com.typesafe.play"  %% "play-test"            % "2.6.6"    % "test"
+  "org.scalatest"      %% "scalatest"            % "3.0.5"    % "test",
+  "org.mockito"         % "mockito-core"         % "2.16.0"   % "test",
+  "com.typesafe.play"  %% "play-test"            % "2.6.7"    % "test"
 )
 
 publishMavenStyle := true

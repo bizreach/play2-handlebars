@@ -45,7 +45,7 @@ Create a new play application and update Build.scala. Specify `0.1.0` (Latest St
 
 ```scala
 libraryDependencies += Seq(
-  "jp.co.bizreach" %% "play2-handlebars" % "0.4.0"
+  "jp.co.bizreach" %% "play2-handlebars" % "0.4.1"
 )
 ```
 
@@ -240,6 +240,7 @@ See `src/test/play2-handlebars-sample`
 
 | Version | Description |
 | ------- | ----------- |
+| 0.4.1   | Fix value mapping issue in lazy val |
 | 0.4.0   | Play `2.6` and Scala `2.12` support |
 | 0.3.1   | Support for compile time DI |
 | 0.3     | Updated the initialization part for Play 2.4 |
