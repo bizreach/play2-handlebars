@@ -19,6 +19,8 @@ libraryDependencies ++= Seq(
   "com.typesafe.play"  %% "play-test"            % "2.6.7"    % "test"
 )
 
+parallelExecution in Test := false
+
 publishMavenStyle := true
 
 publishTo := Some(
