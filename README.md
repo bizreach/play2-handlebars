@@ -1,6 +1,8 @@
 play2-handlebars
 ================
 
+[![Build Status](https://travis-ci.org/bizreach/play2-handlebars.svg?branch=master)](https://travis-ci.org/bizreach/play2-handlebars)
+
 ## Play framework plugin for handlebars.java
 
 play2-handlebars is a tiny play framework plugin to generate html and other test output from `Hanldebars` template. It also provides some helper features for Scala specific processing.
