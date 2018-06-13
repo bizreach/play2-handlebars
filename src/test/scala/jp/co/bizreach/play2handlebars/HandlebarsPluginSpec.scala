@@ -19,18 +19,11 @@ class HandlebarsPluginSpec extends FunSpec with FakePlayHelper with BeforeAndAft
           // Because HBS is just an object, it should be cleared to do test multiple times
           HBS.engine.templates.clear()
 
-          // Quick workaround for the indeterministic result. "assert()"
-          val res0 = HBS.engine.templates.keys.size === 0
-          val res1 = HBS("test-template1", "who" -> "World").toString === "Hello World!"
-          val res2 = HBS.engine.templates.keys.size === 1
-          val res3 = HBS("test-template1", "who" -> "Play").toString === "Hello Play!"
-          val res4 = HBS.engine.templates.keys.size === 1
-
-          assert(res0)
-          assert(res1)
-          assert(res2)
-          assert(res3)
-          assert(res4)
+          assert(HBS.engine.templates.keys.size === 0)
+          assert(HBS("test-template1", "who" -> "World").toString === "Hello World!")
+          assert(HBS.engine.templates.keys.size === 1)
+          assert(HBS("test-template1", "who" -> "Play").toString === "Hello Play!")
+          assert(HBS.engine.templates.keys.size === 1)
         }
       }
     }
