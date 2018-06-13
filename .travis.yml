@@ -3,3 +3,4 @@ sudo: false
 jdk: oraclejdk8
 script:
 - sbt "+ test"
+- cd src/test/play2-handlebars-sample/ && sbt test:compile
