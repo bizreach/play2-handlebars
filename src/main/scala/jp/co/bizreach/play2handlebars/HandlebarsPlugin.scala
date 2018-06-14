@@ -255,6 +255,6 @@ object HBS {
    * CAUTION: this may be slow
    */
   def toJavaMap[A <: Product](product:A):java.util.Map[String, Any] =
-    product.getClass.getDeclaredFields.map(_.getName).zip(product.productIterator.toList).toMap.asJava
+    Product2Map.convert(product).asJava
 
 }
