@@ -9,11 +9,11 @@ scalaVersion := "2.12.6"
 crossScalaVersions := Seq("2.11.12", "2.12.6")
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play"  %% "play"                 % "2.6.7"    % "provided",
-  "com.github.jknack"   % "handlebars"           % "4.0.6",
-  "com.github.jknack"   % "handlebars-jackson2"  % "4.0.6",
+  "com.typesafe.play"  %% "play"                 % "2.6.15"   % "provided",
+  "com.github.jknack"   % "handlebars"           % "4.1.0",
+  "com.github.jknack"   % "handlebars-jackson2"  % "4.1.0",
   "org.scalatest"      %% "scalatest"            % "3.0.5"    % "test",
-  "com.typesafe.play"  %% "play-test"            % "2.6.7"    % "test"
+  "com.typesafe.play"  %% "play-test"            % "2.6.15"   % "test"
 )
 
 parallelExecution in Test := false
