@@ -6,6 +6,7 @@ import com.github.jknack.handlebars.ValueResolver
 import java.util.{Map => jMap, Set => jSet}
 
 import scala.collection.JavaConverters._
+import scala.reflect.NameTransformer
 
 trait OptionResolvable {
 
@@ -96,13 +97,13 @@ object Product2Map {
 
   private def extractFieldMethods(clazz: Class[_]): Array[Method] = {
     clazz.getMethods().filterNot { m => excludeMethodNames.contains(m.getName) }
-      .filterNot { m => m.getName.indexOf("$") >= 0 }
+      .filterNot { m => NameTransformer.decode(m.getName).indexOf("$") >= 0 }
       .filterNot { m => m.getReturnType == Void.TYPE } // we don't want side effects in rendering
       .filter { m => Modifier.isPublic(m.getModifiers) }
       .filter { m => m.getGenericParameterTypes.length == 0 }
   }
 
   def convert(product: Product): Map[String, Any] = extractFieldMethods(product.getClass)
-    .map(m => (m.getName -> m.invoke(product))).toMap
+    .map(m => (NameTransformer.decode(m.getName) -> m.invoke(product))).toMap
 }
 
