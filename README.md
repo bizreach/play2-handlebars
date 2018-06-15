@@ -38,9 +38,9 @@ The reasons why we have created this plugins are :
 
 ## Getting Started
 
-### 1. Add a dependency in `project/Build.scala`
+### 1. Add a dependency in `build.sbt`
 
-Create a new play application and update Build.scala. Specify `0.1.0` (Latest Stable) or `0.2-SNAPSHOT` (Latest Development) for the version part.
+Create a new play application and update build.sbt. Specify `0.1.0` (Latest Stable) or `0.2-SNAPSHOT` (Latest Development) for the version part.
 
 
 #### Play 2.6
@@ -198,38 +198,34 @@ Hello World-san!
 
 In `Development` mode, play2-handlebars reads template files based on relative file directory position. On the other hand,
 in `Production` mode, it reads them inside class paths. Although you can change that by specifying `useClassPathLoader`,
-you might need to configure a few things in `Build.scala`.
+you might need to configure a few things in `build.sbt`.
 
 This may not be the best solution, but let me show our solution in our products. See the complete sample in the sample application.
 
 ```scala
-object ApplicationBuild extends Build {
-
-  // This code derives from play.PlayCommands trait
-  // To skip unexpected reloading when static files and template files change
-  // This unexpected phenomenon has started happening since unmanagedResourceDirectories is added.
-  // Here, resources are removed from the original code
-  val playMonitoredFilesTask = (thisProjectRef, state) map { (ref, state) =>
-    val src = Play.inAllDependencies(ref, unmanagedSourceDirectories in Compile, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
-    val assets = Play.inAllDependencies(ref, unmanagedSourceDirectories in Assets, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
-    val public = Play.inAllDependencies(ref, unmanagedResourceDirectories in Assets, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
-    (src ++ assets ++ public).map { f =>
-      if (!f.exists) f.mkdirs(); f
-    }.map(_.getCanonicalPath).distinct
-  }
-
-  lazy val main = Project("root", file("."))
-    .enablePlugins(play.PlayScala)
-    .settings(
-
-      // To include in the class path
-      unmanagedResourceDirectories in Compile += baseDirectory.value / "resources",
-
-      //...
-
-    )
+// This code derives from play.PlayCommands trait
+// To skip unexpected reloading when static files and template files change
+// This unexpected phenomenon has started happening since unmanagedResourceDirectories is added.
+// Here, resources are removed from the original code
+val playMonitoredFilesTask = (thisProjectRef, state) map { (ref, state) =>
+  val src = Play.inAllDependencies(ref, unmanagedSourceDirectories in Compile, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
+  val assets = Play.inAllDependencies(ref, unmanagedSourceDirectories in Assets, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
+  val public = Play.inAllDependencies(ref, unmanagedResourceDirectories in Assets, Project structure state).foldLeft(Seq.empty[File])(_ ++ _)
+  (src ++ assets ++ public).map { f =>
+    if (!f.exists) f.mkdirs(); f
+  }.map(_.getCanonicalPath).distinct
 }
 
+lazy val main = Project("root", file("."))
+  .enablePlugins(play.PlayScala)
+  .settings(
+
+    // To include in the class path
+    unmanagedResourceDirectories in Compile += baseDirectory.value / "resources",
+
+    //...
+
+  )
 ```
 
 
