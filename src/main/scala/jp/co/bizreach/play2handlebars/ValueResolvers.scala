@@ -97,8 +97,8 @@ object Product2Map {
   private def extractFieldMethods(clazz: Class[_]): Array[Method] = {
     clazz.getMethods().filterNot { m => excludeMethodNames.contains(m.getName) }
       .filterNot { m => m.getName.indexOf("$") >= 0 }
-      .filterNot { m => m.getReturnType.toString == "void" } // we don't want side effects in rendering
-      .filterNot { m => (m.getModifiers & Modifier.PUBLIC) == 0 }
+      .filterNot { m => m.getReturnType == Void.TYPE } // we don't want side effects in rendering
+      .filter { m => Modifier.isPublic(m.getModifiers) }
       .filter { m => m.getGenericParameterTypes.length == 0 }
   }
 
