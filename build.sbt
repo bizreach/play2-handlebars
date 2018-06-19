@@ -13,7 +13,6 @@ libraryDependencies ++= Seq(
   "com.github.jknack"   % "handlebars"           % "4.0.6",
   "com.github.jknack"   % "handlebars-jackson2"  % "4.0.6",
   "org.scalatest"      %% "scalatest"            % "3.0.5"    % "test",
-  "org.mockito"         % "mockito-core"         % "2.16.0"   % "test",
   "com.typesafe.play"  %% "play-test"            % "2.6.7"    % "test"
 )
 
