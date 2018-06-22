@@ -1,7 +1,5 @@
-play2-handlebars
+play2-handlebars [![Build Status](https://travis-ci.org/bizreach/play2-handlebars.svg?branch=master)](https://travis-ci.org/bizreach/play2-handlebars)
 ================
-
-[![Build Status](https://travis-ci.org/bizreach/play2-handlebars.svg?branch=master)](https://travis-ci.org/bizreach/play2-handlebars)
 
 ## Play framework plugin for handlebars.java
 
@@ -40,14 +38,14 @@ The reasons why we have created this plugins are :
 
 ### 1. Add a dependency in `build.sbt`
 
-Create a new play application and update build.sbt. Specify `0.1.0` (Latest Stable) or `0.2-SNAPSHOT` (Latest Development) for the version part.
+Create a new play application and add the library dependency in build.sbt like the below. 
 
 
 #### Play 2.6
 
 ```scala
 libraryDependencies += Seq(
-  "jp.co.bizreach" %% "play2-handlebars" % "0.4.1"
+  "jp.co.bizreach" %% "play2-handlebars" % "0.4.2"
 )
 ```
 
@@ -238,6 +236,7 @@ See `src/test/play2-handlebars-sample`
 
 | Version | Description |
 | ------- | ----------- |
+| 0.4.2   | Add decoding for variable names with special characters, upgrade handlebars.java to 4.1.0 |
 | 0.4.1   | Fix value mapping issue in lazy val |
 | 0.4.0   | Play `2.6` and Scala `2.12` support |
 | 0.3.1   | Support for compile time DI |
