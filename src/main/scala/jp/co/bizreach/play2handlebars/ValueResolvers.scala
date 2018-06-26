@@ -12,9 +12,9 @@ trait OptionResolvable {
 
   def flattenOpt(value: AnyRef): AnyRef =
     value match {
-      case Some(null) => ""
+      case Some(null) => null
       case Some(v) => v.asInstanceOf[AnyRef]
-      case None => ""
+      case None => null
       case v => v
     }
 

@@ -84,6 +84,42 @@ class ValueResolverSpec extends FunSpec with FakePlayHelper {
     }
 
 
+    describe("when a case class has None value") {
+      case class Person(firstName : Option[String], lastName: Option[String])
+      val somePerson = Person(Some("Taro"), Some("Scala"))
+      val nonePerson = Person(None, Some(null))
+
+      it("should extract null value") {
+
+        val context = Context
+          .newBuilder(somePerson)
+          .resolver(CaseClassValueResolver)
+          .build()
+
+        assert(context.get("firstName") === "Taro")
+        assert(context.get("lastName") === "Scala")
+
+        val context2 = Context
+          .newBuilder(nonePerson)
+          .resolver(CaseClassValueResolver)
+          .build()
+
+        assert(context2.get("firstName") === null)
+        assert(context2.get("lastName") === null)
+      }
+
+      it("should write empty string in template") {
+        runApp(PlayApp()) {
+
+          assert(HBS.withProduct("test-template-null", somePerson)
+            .toString === "Your first name:Taro and family name:Scala.")
+          assert(HBS.withProduct("test-template-null", nonePerson)
+            .toString === "Your first name: and family name:.")
+
+        }
+      }
+    }
+
     describe("when the case class is nested") {
       it("should extract the top layer values") {
         runApp(PlayApp()) {
