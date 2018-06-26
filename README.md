@@ -45,7 +45,7 @@ Create a new play application and add the library dependency in build.sbt like t
 
 ```scala
 libraryDependencies += Seq(
-  "jp.co.bizreach" %% "play2-handlebars" % "0.4.2"
+  "jp.co.bizreach" %% "play2-handlebars" % "0.4.3"
 )
 ```
 
@@ -236,7 +236,7 @@ See `src/test/play2-handlebars-sample`
 
 | Version | Description |
 | ------- | ----------- |
-| 0.4.2   | Add decoding for variable names with special characters, upgrade handlebars.java to 4.1.0 |
+| 0.4.3   | Add decoding for variable names with special characters, upgrade handlebars.java to 4.1.0 |
 | 0.4.1   | Fix value mapping issue in lazy val |
 | 0.4.0   | Play `2.6` and Scala `2.12` support |
 | 0.3.1   | Support for compile time DI |
