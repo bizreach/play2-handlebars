@@ -2,18 +2,21 @@ name := "play2-handlebars"
 
 organization := "jp.co.bizreach"
 
-version := "0.4.3"
+version := "0.5.0-SNAPSHOT"
 
-scalaVersion := "2.12.6"
+scalaVersion := "2.12.8"
 
-crossScalaVersions := Seq("2.11.12", "2.12.6")
+crossScalaVersions := Seq("2.11.12", scalaVersion.value, "2.13.0-M5")
+
+val playVersion = "2.7.2"
+val handlebarsVersion = "4.1.2"
 
 libraryDependencies ++= Seq(
-  "com.typesafe.play"  %% "play"                 % "2.6.15"   % "provided",
-  "com.github.jknack"   % "handlebars"           % "4.1.0",
-  "com.github.jknack"   % "handlebars-jackson2"  % "4.1.0",
-  "org.scalatest"      %% "scalatest"            % "3.0.5"    % "test",
-  "com.typesafe.play"  %% "play-test"            % "2.6.15"   % "test"
+  "com.typesafe.play"  %% "play"                 % playVersion   % "provided",
+  "com.github.jknack"   % "handlebars"           % handlebarsVersion,
+  "com.github.jknack"   % "handlebars-jackson2"  % handlebarsVersion,
+  "org.scalatest"      %% "scalatest"            % "3.0.7"       % "test",
+  "com.typesafe.play"  %% "play-test"            % playVersion   % "test"
 )
 
 parallelExecution in Test := false

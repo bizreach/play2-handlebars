@@ -85,6 +85,7 @@ object Product2Map {
     "unapply",
     "hashCode",
     "productElement",
+    "productElementNames",
     "productIterator",
     "productArity",
     "productPrefix",
