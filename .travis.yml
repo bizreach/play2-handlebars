@@ -1,6 +1,9 @@
 language: scala
-sudo: false
-jdk: oraclejdk8
+
+jdk:
+  - openjdk8
+
 script:
-- sbt "+ test"
-- cd src/test/play2-handlebars-sample/ && sbt test:compile
+  - sbt "+ test"
+  - sbt publishLocal
+  - cd src/test/play2-handlebars-sample/ && sbt test:compile
