@@ -6,20 +6,24 @@ version := "0.5.0-SNAPSHOT"
 
 scalaVersion := "2.12.8"
 
-crossScalaVersions := Seq("2.11.12", scalaVersion.value, "2.13.0-M5")
+crossScalaVersions := Seq("2.11.12", scalaVersion.value, "2.13.0")
 
-val playVersion = "2.7.2"
+val playVersion = "2.7.3"
 val handlebarsVersion = "4.1.2"
 
 libraryDependencies ++= Seq(
   "com.typesafe.play"  %% "play"                 % playVersion   % "provided",
   "com.github.jknack"   % "handlebars"           % handlebarsVersion,
   "com.github.jknack"   % "handlebars-jackson2"  % handlebarsVersion,
-  "org.scalatest"      %% "scalatest"            % "3.0.7"       % "test",
+  "org.scalatest"      %% "scalatest"            % "3.0.8"       % "test",
   "com.typesafe.play"  %% "play-test"            % playVersion   % "test"
 )
 
 parallelExecution in Test := false
+
+// TODO It's an sbt bug. As a temporary workaround, we'll add the fork workaround for the black magic.
+// https://github.com/scala/scala-parser-combinators/issues/197
+fork in Test := true
 
 publishMavenStyle := true
 
